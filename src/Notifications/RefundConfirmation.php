@@ -2,10 +2,10 @@
 
 namespace Tipoff\Refunds\Notifications;
 
-use Tipoff\Refunds\Models\Refund;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Tipoff\Refunds\Models\Refund;
 
 class RefundConfirmation extends Notification
 {
