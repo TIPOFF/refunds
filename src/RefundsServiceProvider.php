@@ -24,12 +24,14 @@ class RefundsServiceProvider extends PackageServiceProvider
             ->hasCommand(RefundsCommand::class);
     }
 
-    public function boot()
+    /**
+     * Using packageBooted lifecycle hooks to override the migration file name.
+     * We want to keep the old filename for now.
+     */
+    public function packageBooted()
     {
-        parent::boot();
-
         foreach ($this->package->migrationFileNames as $migrationFileName) {
-            if (! $this->migrationFileExists($migrationFileName)) {
+            if (!$this->migrationFileExists($migrationFileName)) {
                 $this->publishes([
                     $this->package->basePath("/../database/migrations/{$migrationFileName}.php.stub") => database_path('migrations/' . Str::finish($migrationFileName, '.php')),
                 ], "{$this->package->name}-migrations");
