@@ -26,12 +26,6 @@
         "phpunit/phpunit": "^9.3",
         "spatie/laravel-ray": "^1.9"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/tipoff/support"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Tipoff\\Refunds\\": "src",
