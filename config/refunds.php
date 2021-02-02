@@ -3,17 +3,17 @@
 return [
 
     /**
-     * User Modal
+     * User model
      */
     'user_model'    => \App\Models\User::class,
 
     /**
-     * Payment Modal
+     * Payment model
      */
     'payment_model' => \App\Models\Payment::class,
 
     /**
-     * Voucher Modal
+     * Voucher model
      */
     'voucher_model' => \App\Models\Voucher::class,
 ];
