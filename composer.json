@@ -16,14 +16,22 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "illuminate/contracts": "^8.0",
         "spatie/laravel-package-tools": "^1.1",
-        "illuminate/contracts": "^8.0"
+        "stripe/stripe-php": "^7.69",
+        "tipoff/support": "^1.0"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
         "phpunit/phpunit": "^9.3",
         "spatie/laravel-ray": "^1.9"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tipoff/support"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Tipoff\\Refunds\\": "src",
