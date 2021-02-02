@@ -126,18 +126,18 @@ class Refund extends BaseModel
         $amount = $this->amount;
 
         $voucher = config('refunds.voucher_model')::create([
-            'location_id'     => $this->payment->order->location_id,
-            'customer_id'     => $this->payment->customer_id,
+            'location_id' => $this->payment->order->location_id,
+            'customer_id' => $this->payment->customer_id,
             'voucher_type_id' => Refund::REFUND_VOUCHER_TYPE_ID,
-            'redeemable_at'   => now(),
-            'amount'          => $amount,
-            'creator_id'      => $this->creator_id,
-            'updater_id'      => $this->updater_id,
+            'redeemable_at' => now(),
+            'amount' => $amount,
+            'creator_id' => $this->creator_id,
+            'updater_id' => $this->updater_id,
         ]);
 
         $this->fill([
-            'issued_at'  => now(),
-            'issuer_id'  => auth()->id(),
+            'issued_at' => now(),
+            'issuer_id' => auth()->id(),
             'voucher_id' => $voucher->id,
         ]);
 
@@ -166,7 +166,7 @@ class Refund extends BaseModel
         if (empty($payment->charge_id)) {
             throw new \Exception('Cant refund payment without charge id.');
         }
-        if (!empty($amount)) {
+        if (! empty($amount)) {
             $options['amount'] = $amount;
         }
         $user = $payment->customer->user;
@@ -175,9 +175,9 @@ class Refund extends BaseModel
         $payment->amount_refunded = $refund->amount;
 
         $this->fill([
-            'amount'             => $refund->amount,
-            'issued_at'          => now(),
-            'issuer_id'          => auth()->id(),
+            'amount' => $refund->amount,
+            'issued_at' => now(),
+            'issuer_id' => auth()->id(),
             'transaction_number' => $refund->id,
         ]);
 
