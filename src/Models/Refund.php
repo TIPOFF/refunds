@@ -125,7 +125,7 @@ class Refund extends BaseModel
     {
         $amount = $this->amount;
 
-        $voucher = config('refunds.voucher_model')::create([
+        $voucher = config('refunds.model_class.voucher')::create([
             'location_id' => $this->payment->order->location_id,
             'customer_id' => $this->payment->customer_id,
             'voucher_type_id' => Refund::REFUND_VOUCHER_TYPE_ID,
@@ -200,7 +200,7 @@ class Refund extends BaseModel
      */
     public function payment()
     {
-        return $this->belongsTo(config('refunds.payment_modal'));
+        return $this->belongsTo(config('refunds.model_class.payment'));
     }
 
     /**
@@ -208,7 +208,7 @@ class Refund extends BaseModel
      */
     public function voucher()
     {
-        return $this->belongsTo(config('refunds.voucher_model'));
+        return $this->belongsTo(config('refunds.model_class.voucher'));
     }
 
     /**
@@ -216,7 +216,7 @@ class Refund extends BaseModel
      */
     public function issuer()
     {
-        return $this->belongsTo(config('refunds.user_model'), 'issuer_id');
+        return $this->belongsTo(config('refunds.model_class.user'), 'issuer_id');
     }
 
     /**
@@ -224,7 +224,7 @@ class Refund extends BaseModel
      */
     public function creator()
     {
-        return $this->belongsTo(config('refunds.user_model'), 'creator_id');
+        return $this->belongsTo(config('refunds.model_class.user'), 'creator_id');
     }
 
     /**
@@ -232,6 +232,6 @@ class Refund extends BaseModel
      */
     public function updater()
     {
-        return $this->belongsTo(config('refunds.user_model'), 'updater_id');
+        return $this->belongsTo(config('refunds.model_class.user'), 'updater_id');
     }
 }

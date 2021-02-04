@@ -2,18 +2,14 @@
 
 return [
 
-    /**
-     * User model
-     */
-    'user_model'    => \App\Models\User::class,
+    'model_class' => [
 
-    /**
-     * Payment model
-     */
-    'payment_model' => \App\Models\Payment::class,
+        'user'    => \App\Models\User::class,
 
-    /**
-     * Voucher model
-     */
-    'voucher_model' => \App\Models\Voucher::class,
+        'payment' => \App\Models\Payment::class,
+
+        'voucher' => \App\Models\Voucher::class,
+
+    ]
+
 ];
