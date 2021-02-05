@@ -21,20 +21,20 @@ class RefundFactory extends Factory
      */
     public function definition()
     {
-        $paymentModal = config('refunds.payment_modal');
+        $paymentModel = config('tipoff.model_class.payment');
 
-        if (!class_exists($paymentModal)) {
-            throw new \Exception('Cannot find the modal ' . $paymentModal);
+        if (!class_exists($paymentModel)) {
+            throw new \Exception('Cannot find the model ' . $paymentModel);
         }
 
-        $payment = $paymentModal::factory()->create();
+        $payment = $paymentModel::factory()->create();
 
         return [
             'amount'     => rand(1000, 2000),
             'method'     => $this->faker->randomElement([Refund::METHOD_STRIPE, Refund::METHOD_VOUCHER]),
             'payment_id' => $payment->id,
-            'creator_id' => Support::randomOrCreate(config('refunds.user_model')),
-            'updater_id' => Support::randomOrCreate(config('refunds.user_model')),
+            'creator_id' => Support::randomOrCreate(config('tipoff.model_class.user')),
+            'updater_id' => Support::randomOrCreate(config('tipoff.model_class.user')),
         ];
     }
 }
