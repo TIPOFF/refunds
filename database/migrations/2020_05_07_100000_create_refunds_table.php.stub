@@ -9,13 +9,13 @@ class CreateRefundsTable extends Migration
     public function up()
     {
         Schema::create('refunds', function (Blueprint $table) {
-            $userModel = config('refunds.model_class.user');
+            $userModel = config('tipoff.model_class.user');
             $userTable = (new $userModel)->getTable();
 
-            $paymentModel = config('refunds.model_class.payment');
+            $paymentModel = config('tipoff.model_class.payment');
             $paymentTable = (new $paymentModel)->getTable();
 
-            $voucherModel = config('refunds.model_class.voucher');
+            $voucherModel = config('tipoff.model_class.voucher');
             $voucherTable = (new $voucherModel)->getTable();
 
             $table->id();
