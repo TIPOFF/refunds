@@ -1,15 +1,15 @@
 <?php namespace Tipoff\Refunds\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Tipoff\Refunds\Notifications\RefundConfirmation;
 use Tipoff\Support\Models\BaseModel;
+use Tipoff\Support\Traits\HasPackageFactory;
 
 class Refund extends BaseModel
 {
-    use HasFactory;
+    use HasPackageFactory;
 
     const METHOD_STRIPE = 'Stripe';
     const METHOD_VOUCHER = 'Voucher';
