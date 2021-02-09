@@ -5,10 +5,14 @@ use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Tipoff\Refunds\Notifications\RefundConfirmation;
 use Tipoff\Support\Models\BaseModel;
+use Tipoff\Support\Traits\HasCreator;
 use Tipoff\Support\Traits\HasPackageFactory;
+use Tipoff\Support\Traits\HasUpdater;
 
 class Refund extends BaseModel
 {
+    use HasCreator;
+    use HasUpdater;
     use HasPackageFactory;
 
     const METHOD_STRIPE = 'Stripe';
@@ -27,9 +31,6 @@ class Refund extends BaseModel
         parent::boot();
 
         static::creating(function ($refund) {
-            if (auth()->check()) {
-                $refund->creator_id = auth()->id();
-            }
             $refund->generateRefundNumber();
         });
 
@@ -42,9 +43,6 @@ class Refund extends BaseModel
             }
             if ($refund->amount > ($refund->payment->amount_refundable)) {
                 throw new \Exception('Please check the payment for the max amount that can be refunded.');
-            }
-            if (auth()->check()) {
-                $refund->updater_id = auth()->id();
             }
         });
 
@@ -217,21 +215,5 @@ class Refund extends BaseModel
     public function issuer()
     {
         return $this->belongsTo(config('tipoff.model_class.user'), 'issuer_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function creator()
-    {
-        return $this->belongsTo(config('tipoff.model_class.user'), 'creator_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function updater()
-    {
-        return $this->belongsTo(config('tipoff.model_class.user'), 'updater_id');
     }
 }
