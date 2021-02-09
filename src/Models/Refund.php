@@ -123,7 +123,7 @@ class Refund extends BaseModel
     {
         $amount = $this->amount;
 
-        $voucher = config('tipoff.model_class.voucher')::create([
+        $voucher = app('voucher')::create([
             'location_id' => $this->payment->order->location_id,
             'customer_id' => $this->payment->customer_id,
             'voucher_type_id' => Refund::REFUND_VOUCHER_TYPE_ID,
@@ -193,27 +193,18 @@ class Refund extends BaseModel
         $this->refund_number = $token;
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function payment()
     {
-        return $this->belongsTo(config('tipoff.model_class.payment'));
+        return $this->belongsTo(app('payment'));
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function voucher()
     {
-        return $this->belongsTo(config('tipoff.model_class.voucher'));
+        return $this->belongsTo(app('voucher'));
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function issuer()
     {
-        return $this->belongsTo(config('tipoff.model_class.user'), 'issuer_id');
+        return $this->belongsTo(app('user'), 'issuer_id');
     }
 }
