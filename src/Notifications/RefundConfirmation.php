@@ -20,7 +20,7 @@ class RefundConfirmation extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param Refund
+     * @param Refund $refund
      */
     public function __construct(Refund $refund)
     {
@@ -58,7 +58,7 @@ class RefundConfirmation extends Notification
         }
 
         if ($refund->isVoucher()) {
-            $message->line("Refund voucher code: " . $this->voucher->code);
+            $message->line("Refund voucher code: " . $this->refund->voucher->code);
         }
 
         return $message;
