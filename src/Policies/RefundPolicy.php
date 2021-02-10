@@ -2,9 +2,9 @@
 
 namespace Tipoff\Refunds\Policies;
 
-use Tipoff\Refunds\Models\Refund;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Tipoff\Refunds\Models\Refund;
 
 class RefundPolicy
 {
