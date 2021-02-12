@@ -2,13 +2,22 @@
 
 namespace Tipoff\Refunds;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Tipoff\Refunds\Commands\RefundsCommand;
+use Tipoff\Refunds\Models\Refund;
+use Tipoff\Refunds\Policies\RefundPolicy;
 
 class RefundsServiceProvider extends PackageServiceProvider
 {
+    public function boot()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        parent::boot();
+    }
+
     public function configurePackage(Package $package): void
     {
         /*
@@ -19,23 +28,11 @@ class RefundsServiceProvider extends PackageServiceProvider
         $package
             ->name('refunds')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('2020_05_07_100000_create_refunds_table')
-            ->hasCommand(RefundsCommand::class);
+            ->hasViews();
     }
 
-    /**
-     * Using packageBooted lifecycle hooks to override the migration file name.
-     * We want to keep the old filename for now.
-     */
-    public function packageBooted()
+    public function registeringPackage()
     {
-        foreach ($this->package->migrationFileNames as $migrationFileName) {
-            if (! $this->migrationFileExists($migrationFileName)) {
-                $this->publishes([
-                    $this->package->basePath("/../database/migrations/{$migrationFileName}.php.stub") => database_path('migrations/' . Str::finish($migrationFileName, '.php')),
-                ], "{$this->package->name}-migrations");
-            }
-        }
+        Gate::policy(Refund::class, RefundPolicy::class);
     }
 }

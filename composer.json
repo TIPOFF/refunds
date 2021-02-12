@@ -17,18 +17,17 @@
     "require": {
         "php": "^7.4|^8.0",
         "stripe/stripe-php": "^7.69",
-        "tipoff/support": "^1.2.0"
+        "tipoff/authorization": "^1.0.1",
+        "tipoff/support": "^1.2.2"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.3",
-        "spatie/laravel-ray": "^1.9",
-        "vimeo/psalm": "^4.4"
+        "tipoff/test-support": "^1.0.2"
     },
     "autoload": {
         "psr-4": {
             "Tipoff\\Refunds\\": "src",
-            "Tipoff\\Refunds\\Database\\Factories\\": "database/factories"
+            "Tipoff\\Refunds\\Database\\Factories\\": "database/factories",
+            "Tipoff\\Refunds\\Database\\Seeders\\": "database/seeders"
         }
     },
     "autoload-dev": {
