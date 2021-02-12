@@ -1,6 +1,7 @@
 <?php namespace Tipoff\Refunds\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Tipoff\Refunds\Notifications\RefundConfirmation;
@@ -57,7 +58,7 @@ class Refund extends BaseModel
     /**
      * Issue refund.
      *
-     * @return self
+     * @return self|null
      * @throws \Exception
      */
     public function issue()
@@ -66,11 +67,8 @@ class Refund extends BaseModel
             case Refund::METHOD_STRIPE:
                 return $this->stripeRefund();
 
-                break;
             case Refund::METHOD_VOUCHER:
                 return $this->voucherRefund();
-
-                break;
         }
     }
 
@@ -123,7 +121,10 @@ class Refund extends BaseModel
     {
         $amount = $this->amount;
 
-        $voucher = app('voucher')::create([
+        /** @var Model $voucherModel */
+        $voucherModel = app('voucher');
+
+        $voucher = $voucherModel::create([
             'location_id' => $this->payment->order->location_id,
             'customer_id' => $this->payment->customer_id,
             'voucher_type_id' => Refund::REFUND_VOUCHER_TYPE_ID,
