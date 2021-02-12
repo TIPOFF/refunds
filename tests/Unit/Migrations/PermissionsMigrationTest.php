@@ -16,6 +16,6 @@ class PermissionsMigrationTest extends TestCase
     public function permissions_seeded()
     {
         $this->assertTrue(Schema::hasTable('permissions'));
-        $this->assertDatabaseCount('permissions', 4);
+        $this->assertDatabaseCount('permissions', 3);
     }
 }
