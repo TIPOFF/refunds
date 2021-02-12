@@ -5,8 +5,6 @@ namespace Tipoff\Refunds;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Tipoff\Refunds\Models\Refund;
-use Tipoff\Support\TipoffPackage;
-use Tipoff\Support\TipoffServiceProvider;
 
 class RefundsServiceProvider extends PackageServiceProvider
 {
