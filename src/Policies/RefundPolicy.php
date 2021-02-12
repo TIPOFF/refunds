@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tipoff\Refunds\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Tipoff\Support\Contracts\Models\UserInterface;
 use Tipoff\Refunds\Models\Refund;
+use Tipoff\Support\Contracts\Models\UserInterface;
 
 class RefundPolicy
 {

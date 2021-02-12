@@ -3,7 +3,6 @@
 namespace Tipoff\Refunds;
 
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Tipoff\Refunds\Models\Refund;
