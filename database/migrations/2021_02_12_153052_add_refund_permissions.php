@@ -16,8 +16,7 @@ class AddRefundPermissions extends Migration
             foreach ([
                          'view refunds',
                          'request refunds',
-                         'issue refunds',
-                         'delete refunds'
+                         'issue refunds'
                      ] as $name) {
                 app(Permission::class)::findOrCreate($name, null);
             };
