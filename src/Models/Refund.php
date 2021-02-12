@@ -21,8 +21,6 @@ class Refund extends BaseModel
 
     const REFUND_VOUCHER_TYPE_ID = 1;
 
-    protected $guarded = ['id'];
-
     protected $casts = [
         'issued_at' => 'datetime',
     ];
