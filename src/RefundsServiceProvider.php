@@ -1,40 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tipoff\Refunds;
 
-use Illuminate\Support\Facades\Gate;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Tipoff\Refunds\Models\Refund;
 use Tipoff\Refunds\Policies\RefundPolicy;
+use Tipoff\Support\TipoffPackage;
+use Tipoff\Support\TipoffServiceProvider;
 
-class RefundsServiceProvider extends PackageServiceProvider
+class RefundsServiceProvider extends TipoffServiceProvider
 {
-    public function boot()
+    public function configureTipoffPackage(TipoffPackage $package): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
-        parent::boot();
-    }
-
-    public function configurePackage(Package $package): void
-    {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
-            ->hasModelInterfaces([
-                RefundInterface::class => Refund::class,
+            ->hasPolicies([
+                Refund::class => RefundPolicy::class,
             ])
             ->name('refunds')
-            ->hasConfigFile()
-            ->hasViews();
-    }
-
-    public function registeringPackage()
-    {
-        Gate::policy(Refund::class, RefundPolicy::class);
+            ->hasConfigFile();
     }
 }
