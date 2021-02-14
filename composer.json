@@ -46,10 +46,7 @@
         "laravel": {
             "providers": [
                 "Tipoff\\Refunds\\RefundsServiceProvider"
-            ],
-            "aliases": {
-                "Refunds": "Tipoff\\Refunds\\RefundsFacade"
-            }
+            ]
         }
     },
     "repositories": [
