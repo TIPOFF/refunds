@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tipoff\Refunds;
 
 use Tipoff\Refunds\Models\Refund;
+use Tipoff\Refunds\Policiess\RefundPolicy;
 use Tipoff\Support\TipoffPackage;
 use Tipoff\Support\TipoffServiceProvider;
 
