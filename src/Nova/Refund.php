@@ -26,7 +26,7 @@ class Refund extends BaseResource
     ];
 
     protected array $actionClassList = [
-        IssueRefund::class
+        IssueRefund::class,
     ];
 
     public function fieldsForIndex(NovaRequest $request)

@@ -10,7 +10,8 @@ use Laravel\Nova\Fields\ActionFields;
 
 class IssueRefund extends Action
 {
-    use InteractsWithQueue, Queueable;
+    use InteractsWithQueue;
+    use Queueable;
 
     /**
      * Perform the action on the given models.
