@@ -17,6 +17,9 @@ class RefundsServiceProvider extends TipoffServiceProvider
             ->hasPolicies([
                 Refund::class => RefundPolicy::class,
             ])
+            ->hasNovaResources([
+                \Tipoff\Refunds\Nova\Refund::class,
+            ])
             ->name('refunds')
             ->hasConfigFile();
     }
