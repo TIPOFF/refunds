@@ -1,4 +1,8 @@
-<?php namespace Tipoff\Refunds\Models;
+<?php 
+
+declare(strict_types=1);
+
+namespace Tipoff\Refunds\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

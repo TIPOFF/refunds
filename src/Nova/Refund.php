@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tipoff\Refunds\Nova;
 
 use Illuminate\Http\Request;
