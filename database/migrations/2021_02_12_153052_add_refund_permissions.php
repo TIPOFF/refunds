@@ -2,24 +2,18 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Migrations\Migration;
-use Spatie\Permission\Contracts\Permission;
-use Spatie\Permission\PermissionRegistrar;
+use Tipoff\Authorization\Permissions\BasePermissionsMigration;
 
-class AddRefundPermissions extends Migration
+class AddRefundPermissions extends BasePermissionsMigration
 {
     public function up()
     {
-        if (app()->has(Permission::class)) {
-            app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $permissions = [
+            'view refunds',
+            'request refunds',
+            'issue refunds'
+        ];
 
-            foreach ([
-                         'view refunds',
-                         'request refunds',
-                         'issue refunds'
-                     ] as $name) {
-                app(Permission::class)::findOrCreate($name, null);
-            };
-        }
+        $this->createPermissions($permissions);
     }
 }
