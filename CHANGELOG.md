@@ -18,3 +18,13 @@ All notable changes to `refunds` will be documented in this file.
 ## 1.1.1 - 2021-02-11
 
 - update migrations
+
+## 2.0.0 - 2021-03-04
+
+- add model
+- add factory
+- add policy
+- register policy
+- add nova resource
+- register nova resource
+- add nova action
