@@ -24,6 +24,7 @@ class IssueRefund extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
+        /** @psalm-suppress TooManyArguments */
         $models->each(function ($model) use ($fields) {
             $model->issue();
             $model->notifyCustomer();
