@@ -6,6 +6,7 @@ namespace Tipoff\Refunds\Tests\Unit\Migrations;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Permission;
 use Tipoff\Refunds\Tests\TestCase;
 
 class PermissionsMigrationTest extends TestCase
@@ -16,6 +17,13 @@ class PermissionsMigrationTest extends TestCase
     public function permissions_seeded()
     {
         $this->assertTrue(Schema::hasTable('permissions'));
-        $this->assertDatabaseCount('permissions', 3);
+
+        $seededPermissions = app(Permission::class)->whereIn('name', [
+            'view refunds',
+            'request refunds',
+            'issue refunds',
+        ])->pluck('name');
+
+        $this->assertCount(3, $seededPermissions);
     }
 }
