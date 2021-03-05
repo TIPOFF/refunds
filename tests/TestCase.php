@@ -8,8 +8,8 @@ use Laravel\Nova\NovaCoreServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
 use Tipoff\Authorization\AuthorizationServiceProvider;
 use Tipoff\Refunds\RefundsServiceProvider;
-use Tipoff\Support\SupportServiceProvider;
 use Tipoff\Refunds\Tests\Support\Providers\NovaPackageServiceProvider;
+use Tipoff\Support\SupportServiceProvider;
 use Tipoff\TestSupport\BaseTestCase;
 
 class TestCase extends BaseTestCase
