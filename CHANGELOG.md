@@ -28,3 +28,8 @@ All notable changes to `refunds` will be documented in this file.
 - add nova resource
 - register nova resource
 - add nova action
+
+## 2.1.0 - 2021-03-09
+
+- change migration
+- replace customer relationship with user
