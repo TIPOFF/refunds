@@ -9,9 +9,9 @@ class AddRefundPermissions extends BasePermissionsMigration
     public function up()
     {
         $permissions = [
-            'view refunds',
-            'request refunds',
-            'issue refunds'
+            'view refunds' => ['Owner', 'Staff'],
+            'request refunds' => ['Owner'],
+            'issue refunds' => ['Owner']
         ];
 
         $this->createPermissions($permissions);

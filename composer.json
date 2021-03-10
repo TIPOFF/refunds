@@ -18,7 +18,7 @@
         "php": "^7.4|^8.0",
         "stripe/stripe-php": "^7.69",
         "tipoff/authorization": "^2.5.0",
-        "tipoff/support": "^1.5.10",
+        "tipoff/support": "^1.5.11",
         "tipoff/vouchers": "^2.2.0"
     },
     "require-dev": {
