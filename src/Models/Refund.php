@@ -42,11 +42,8 @@ class Refund extends BaseModel
             Assert::lazy()
                 ->that($refund->payment_id)->notEmpty('A refund must be applied to a payment.')
                 ->that($refund->amount)->notEmpty('A refund must be for an amount.')
+                ->that($refund->amount)->lessOrEqualThan($refund->payment->amount_refundable, 'Please check the payment for the max amount that can be refunded.')
                 ->verifyNow();
-            //Todo: Add the following to the assert if possible
-            if ($refund->amount > ($refund->payment->amount_refundable)) {
-                throw new \Exception('Please check the payment for the max amount that can be refunded.');
-            }
         });
 
         static::created(function ($refund) {
