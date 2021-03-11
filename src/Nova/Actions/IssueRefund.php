@@ -24,7 +24,7 @@ class IssueRefund extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        /** @psalm-suppress */
+        /** @psalm-suppress UnusedVariable*/
         $models->each(function ($model) use ($fields) {
             $model->issue();
             $model->notifyCustomer();
