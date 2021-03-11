@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tipoff\Refunds\Models;
 
+use Assert\Assert;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -38,15 +39,11 @@ class Refund extends BaseModel
         });
 
         static::saving(function ($refund) {
-            if (empty($refund->payment_id)) {
-                throw new \Exception('A refund must be applied to a payment.');
-            }
-            if (empty($refund->amount)) {
-                throw new \Exception('A refund must be for an amount.');
-            }
-            if ($refund->amount > ($refund->payment->amount_refundable)) {
-                throw new \Exception('Please check the payment for the max amount that can be refunded.');
-            }
+            Assert::lazy()
+                ->that($refund->payment_id)->notEmpty('A refund must be applied to a payment.')
+                ->that($refund->amount)->notEmpty('A refund must be for an amount.')
+                ->that($refund->amount)->lessOrEqualThan($refund->payment->amount_refundable, 'Please check the payment for the max amount that can be refunded.')
+                ->verifyNow();
         });
 
         static::created(function ($refund) {
