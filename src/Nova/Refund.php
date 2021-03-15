@@ -28,6 +28,8 @@ class Refund extends BaseResource
         'id',
         'refund_number',
     ];
+    
+    public static $group = 'Operations Units';
 
     protected array $actionClassList = [
         IssueRefund::class,

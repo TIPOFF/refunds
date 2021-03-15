@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "stripe/stripe-php": "^7.69",
+        "stripe/stripe-php": "^7.75",
         "tipoff/authorization": "^2.5.5",
         "tipoff/payments": "dev-pdbreen/feature/payment-interfaces-2 as 2.3",
         "tipoff/support": "dev-pdbreen/feature/payment-interface as 1.6.3"
