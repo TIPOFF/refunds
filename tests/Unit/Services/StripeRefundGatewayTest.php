@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tipoff\Refunds\Tests\Unit\Services;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Laravel\Cashier\Payment;
-use Stripe\PaymentIntent;
 use Tipoff\Authorization\Models\User;
 use Tipoff\Locations\Models\Location;
 use Tipoff\Refunds\Exceptions\PaymentRefundException;
