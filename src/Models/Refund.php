@@ -76,6 +76,7 @@ class Refund extends BaseModel implements RefundInterface
         });
 
         static::saved(function (Refund $refund) {
+            /** @var Payment $payment */
             $payment = $refund->payment;
             $payment->amount_refunded = static::amountRefunded($payment);
             $payment->save();
