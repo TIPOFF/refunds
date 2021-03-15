@@ -13,8 +13,10 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Tipoff\Refunds\Enums\RefundMethod;
 use Tipoff\Refunds\Nova\Actions\IssueRefund;
 use Tipoff\Support\Nova\BaseResource;
+use Tipoff\Support\Nova\Fields\Enum;
 
 class Refund extends BaseResource
 {
@@ -52,7 +54,7 @@ class Refund extends BaseResource
             Text::make('Refund Number')->exceptOnForms(),
             Currency::make('Amount')->asMinorUnits()->exceptOnForms(),
             nova('voucher') ? BelongsTo::make('Voucher', 'voucher', nova('voucher'))->exceptOnForms() : null,
-            Text::make('Method')->exceptOnForms(),
+            Enum::make('Method')->attach(RefundMethod::class)->exceptOnForms(),
             Date::make('Requested At', 'created_at')->exceptOnForms(),
             Date::make('Issued At', 'issued_at')->exceptOnForms(),
             nova('user') ? BelongsTo::make('Issued By', 'issuer', nova('user'))->exceptOnForms() : null,
