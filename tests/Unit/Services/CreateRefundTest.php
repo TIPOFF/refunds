@@ -9,13 +9,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Notification;
 use Tipoff\Authorization\Models\User;
 use Tipoff\Payments\Models\Payment;
+use Tipoff\Refunds\Enums\RefundMethod;
 use Tipoff\Refunds\Exceptions\PaymentRefundException;
 use Tipoff\Refunds\Exceptions\VouchersNotAvailableException;
-use Tipoff\Refunds\Notifications\RefundConfirmation;
-use Tipoff\Refunds\Tests\TestCase;
-use Tipoff\Refunds\Enums\RefundMethod;
 use Tipoff\Refunds\Models\Refund;
+use Tipoff\Refunds\Notifications\RefundConfirmation;
 use Tipoff\Refunds\Services\RefundGateway\RefundGateway;
+use Tipoff\Refunds\Tests\TestCase;
 use Tipoff\Support\Contracts\Checkout\Vouchers\VoucherInterface;
 
 class CreateRefundTest extends TestCase
