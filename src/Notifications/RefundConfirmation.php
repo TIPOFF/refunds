@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tipoff\Refunds\Notifications;
 
+use Assert\Assert;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -13,39 +14,20 @@ class RefundConfirmation extends Notification
 {
     use Queueable;
 
-    /**
-     * Refund.
-     * @var Refund
-     */
-    public $refund;
+    public Refund $refund;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @param Refund $refund
-     */
     public function __construct(Refund $refund)
     {
+        Assert::that($refund->issued_at)->notNull('Refund has not been issued.');
+
         $this->refund = $refund;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via($notifiable)
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
     public function toMail($notifiable)
     {
         $refund = $this->refund;
@@ -60,7 +42,7 @@ class RefundConfirmation extends Notification
         }
 
         if ($refund->isVoucher()) {
-            $message->line("Refund voucher code: " . $this->refund->voucher->code);
+            $message->line("Refund voucher code: " . $refund->getVoucher()->getCode());
         }
 
         return $message;

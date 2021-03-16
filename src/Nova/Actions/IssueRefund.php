@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
+use Tipoff\Refunds\Models\Refund;
 
 class IssueRefund extends Action
 {
@@ -19,17 +20,15 @@ class IssueRefund extends Action
      * Perform the action on the given models.
      *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
+     * @param  \Illuminate\Support\Collection  $refunds
      * @return mixed
      */
-    public function handle(ActionFields $fields, Collection $models)
+    public function handle(ActionFields $fields, Collection $refunds)
     {
-        /** @psalm-suppress UnusedVariable*/
-        $models->each(function ($model) use ($fields) {
-            $model->issue();
-            $model->notifyCustomer();
+        $refunds->each(function (Refund $refund) {
+            $refund->issue()->notifyUser();
         });
 
-        return Action::message($fields->type.' refund issued.');
+        return Action::message($fields->type . ' refund issued.');
     }
 }

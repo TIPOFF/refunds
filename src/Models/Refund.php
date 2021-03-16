@@ -6,39 +6,68 @@ namespace Tipoff\Refunds\Models;
 
 use Assert\Assert;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Stripe\Stripe;
+use Tipoff\Authorization\Models\User;
+use Tipoff\Payments\Models\Payment;
+use Tipoff\Refunds\Enums\RefundMethod;
 use Tipoff\Refunds\Notifications\RefundConfirmation;
+use Tipoff\Refunds\Services\IssueRefund;
+use Tipoff\Support\Casts\Enum;
+use Tipoff\Support\Contracts\Checkout\Vouchers\VoucherInterface;
+use Tipoff\Support\Contracts\Payment\PaymentInterface;
+use Tipoff\Support\Contracts\Payment\RefundInterface;
 use Tipoff\Support\Models\BaseModel;
 use Tipoff\Support\Traits\HasCreator;
 use Tipoff\Support\Traits\HasPackageFactory;
 use Tipoff\Support\Traits\HasUpdater;
 
-class Refund extends BaseModel
+/**
+ * @property int id
+ * @property Payment payment
+ * @property string refund_number
+ * @property int amount
+ * @property RefundMethod method
+ * @property string|null transaction_number
+ * @property VoucherInterface|null voucher
+ * @property User|null issuer
+ * @property User creator
+ * @property User updater
+ * @property Carbon issued_at
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ * // Raw relations
+ * @property int payment_id
+ * @property int voucher_id
+ * @property int issuer_id
+ * @property int creator_id
+ * @property int updater_id
+ */
+class Refund extends BaseModel implements RefundInterface
 {
     use HasCreator;
     use HasUpdater;
     use HasPackageFactory;
 
-    const METHOD_STRIPE = 'Stripe';
-    const METHOD_VOUCHER = 'Voucher';
-
-    const REFUND_VOUCHER_TYPE_ID = 1;
-
     protected $casts = [
+        'amount' => 'integer',
+        'method' => Enum::class . ':' . RefundMethod::class,
         'issued_at' => 'datetime',
+        'payment_id' => 'integer',
+        'voucher_id' => 'integer',
+        'issuer_id' => 'integer',
+        'creator_id' => 'integer',
+        'updater_id' => 'integer',
     ];
 
     public static function boot()
     {
         parent::boot();
 
-        static::creating(function ($refund) {
-            $refund->generateRefundNumber();
+        static::creating(function (Refund $refund) {
+            $refund->refund_number = static::generateRefundNumber();
         });
 
-        static::saving(function ($refund) {
+        static::saving(function (Refund $refund) {
             Assert::lazy()
                 ->that($refund->payment_id)->notEmpty('A refund must be applied to a payment.')
                 ->that($refund->amount)->notEmpty('A refund must be for an amount.')
@@ -46,151 +75,48 @@ class Refund extends BaseModel
                 ->verifyNow();
         });
 
-        static::created(function ($refund) {
-            $refund
-                ->payment
-                ->generateAmountRefunded()
-                ->save();
+        static::saved(function (Refund $refund) {
+            /** @var Payment $payment */
+            $payment = $refund->payment;
+            $payment->amount_refunded = static::amountRefunded($payment);
+            $payment->save();
         });
     }
 
-    /**
-     * Issue refund.
-     *
-     * @return self|null
-     * @throws \Exception
-     */
-    public function issue()
+    public function issue(): self
     {
-        switch ($this->method) {
-            case Refund::METHOD_STRIPE:
-                return $this->stripeRefund();
-
-            case Refund::METHOD_VOUCHER:
-                return $this->voucherRefund();
-        }
+        return app(IssueRefund::class)($this);
     }
 
-    /**
-     * Is a stripe refund.
-     *
-     * @return bool
-     */
-    public function isStripe()
+    public function isStripe(): bool
     {
-        return $this->method == Refund::METHOD_STRIPE;
+        return $this->method->is(RefundMethod::STRIPE());
     }
 
-    /**
-     * Is a voucher refund.
-     *
-     * @return bool
-     */
-    public function isVoucher()
+    public function isVoucher(): bool
     {
-        return $this->method == Refund::METHOD_VOUCHER;
+        return $this->method->is(RefundMethod::VOUCHER());
     }
 
-    /**
-     * Notify customner about refund.
-     *
-     * @return void
-     */
-    public function notifyCustomer()
+    public function notifyUser(): self
     {
-        $this->payment->customer->user->notify(new RefundConfirmation($this));
+        $this->payment->user->notify(new RefundConfirmation($this));
+
+        return $this;
     }
 
-    /**
-     * Generate formated amount.
-     *
-     * @return string
-     */
-    public function decoratedAmount()
+    public function decoratedAmount(): string
     {
         return '$' . number_format($this->amount / 100, 2, '.', ',');
     }
 
-    /**
-     * Refund transaction to voucher.
-     *
-     * @return Refund
-     */
-    public function voucherRefund()
-    {
-        $amount = $this->amount;
-
-        /** @var Model $voucherModel */
-        $voucherModel = app('voucher');
-
-        $voucher = $voucherModel::create([
-            'location_id' => $this->payment->order->location_id,
-            'customer_id' => $this->payment->customer_id,
-            'voucher_type_id' => Refund::REFUND_VOUCHER_TYPE_ID,
-            'redeemable_at' => now(),
-            'amount' => $amount,
-            'creator_id' => $this->creator_id,
-            'updater_id' => $this->updater_id,
-        ]);
-
-        $this->fill([
-            'issued_at' => now(),
-            'issuer_id' => auth()->id(),
-            'voucher_id' => $voucher->id,
-        ]);
-
-        $this->save();
-
-        return $this;
-    }
-
-    /**
-     * Refund stripe payment.
-     *
-     * @return Refund
-     */
-    public function stripeRefund()
-    {
-        $options = [];
-
-        $payment = $this->payment;
-        $amount = $this->amount;
-
-        Stripe::setApiKey($payment->order->location->stripe_secret);
-
-        config(['cashier.key' => $payment->order->location->stripe_publishable]);
-        config(['cashier.secret' => $payment->order->location->stripe_secret]);
-
-        if (empty($payment->charge_id)) {
-            throw new \Exception('Cant refund payment without charge id.');
-        }
-        if (! empty($amount)) {
-            $options['amount'] = $amount;
-        }
-        $user = $payment->customer->user;
-
-        $refund = $user->refund($payment->charge_id, $options);
-        $payment->amount_refunded = $refund->amount;
-
-        $this->fill([
-            'amount' => $refund->amount,
-            'issued_at' => now(),
-            'issuer_id' => auth()->id(),
-            'transaction_number' => $refund->id,
-        ]);
-
-        $this->save();
-
-        return $this;
-    }
-
-    public function generateRefundNumber()
+    private static function generateRefundNumber(): string
     {
         do {
             $token = Str::of(Carbon::now('America/New_York')->format('ymdB'))->substr(1, 7) . Str::upper(Str::random(2));
-        } while (self::where('refund_number', $token)->first()); //check if the token already exists and if it does, try again
+        } while (static::query()->where('refund_number', $token)->exists()); //check if the token already exists and if it does, try again
 
-        $this->refund_number = $token;
+        return $token;
     }
 
     public function payment()
@@ -206,5 +132,31 @@ class Refund extends BaseModel
     public function issuer()
     {
         return $this->belongsTo(app('user'), 'issuer_id');
+    }
+
+    public function getVoucher(): VoucherInterface
+    {
+        return $this->voucher;
+    }
+
+    public static function createRefund(PaymentInterface $payment, int $amount, string $method): RefundInterface
+    {
+        $result = new static();
+        $result->amount = $amount;
+        $result->method = RefundMethod::byValue($method);
+        $result->payment_id = $payment->getId();
+        $result->save();
+
+        return $result;
+    }
+
+    public static function amountRefunded(PaymentInterface $payment): int
+    {
+        $result = static::query()
+            ->whereNotNull('issued_at')
+            ->where('payment_id', '=', $payment->getId())
+            ->sum('amount');
+
+        return (int) $result;
     }
 }
