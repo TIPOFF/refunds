@@ -33,3 +33,8 @@ All notable changes to `refunds` will be documented in this file.
 
 - change migration
 - replace customer relationship with user
+
+## 2.2.0 - 2021-03-15
+
+- implement refund interfaces
+- implement refund gateway
