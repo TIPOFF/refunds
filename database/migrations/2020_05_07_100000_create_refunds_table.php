@@ -15,7 +15,7 @@ class CreateRefundsTable extends Migration
             $table->unsignedInteger('amount'); // Amount is in cents.
             $table->string('method');
             $table->string('transaction_number')->nullable();
-            $table->foreignIdFor(app('voucher'))->nullable();
+            $table->unsignedBigInteger('voucher_id')->nullable()->index();
             $table->foreignIdFor(app('user'), 'issuer_id')->nullable();
             $table->foreignIdFor(app('user'), 'creator_id');
             $table->foreignIdFor(app('user'), 'updater_id');
