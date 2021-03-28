@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tipoff\Refunds\Tests\Feature\Nova;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tipoff\Authorization\Models\User;
 use Tipoff\Refunds\Models\Refund;
 use Tipoff\Refunds\Tests\TestCase;
-use Tipoff\Authorization\Models\User;
 
 class RefundResourceTest extends TestCase
 {
-use DatabaseTransactions;
+    use DatabaseTransactions;
 
     private const NOVA_ROUTE = 'nova-api/refunds';
 
@@ -119,6 +119,4 @@ use DatabaseTransactions;
             'No Role' => [null, false, false],
         ];
     }
-
-
 }
