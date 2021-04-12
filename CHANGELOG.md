@@ -38,3 +38,7 @@ All notable changes to `refunds` will be documented in this file.
 
 - implement refund interfaces
 - implement refund gateway
+
+## 2.3.0 - 2021-04-11
+
+- bump package dependencies
